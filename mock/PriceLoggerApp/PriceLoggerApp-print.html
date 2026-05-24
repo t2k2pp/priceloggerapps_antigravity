@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>PriceLoggerApp — Print</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #FAF4EB; font-family: "Noto Sans JP", -apple-system, system-ui, sans-serif; color: #2B2622; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { box-sizing: border-box; }
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  @page { size: A4 landscape; margin: 0.5cm; }
+
+  .page {
+    width: 297mm; min-height: 200mm; padding: 14mm 12mm 10mm;
+    background:
+      radial-gradient(900px 400px at 15% -5%, #FFE8D6 0%, transparent 60%),
+      radial-gradient(1000px 500px at 90% 110%, #F5EEE4 0%, transparent 60%),
+      #FAF4EB;
+    box-sizing: border-box;
+    display: flex; flex-direction: column; align-items: center;
+    break-after: page; page-break-after: always;
+  }
+  .page:last-of-type { break-after: auto; page-break-after: auto; }
+
+  .page-header {
+    width: 100%; max-width: 260mm; margin: 0 auto 10mm;
+    display: flex; align-items: baseline; justify-content: space-between;
+  }
+  .page-header h1 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.3px; }
+  .page-header .sub { font-size: 12px; color: #6B6059; }
+  .page-header .pageno { font-size: 11px; color: #A39890; font-weight: 700; letter-spacing: 1px; }
+
+  .frames-row {
+    display: flex; gap: 24mm; justify-content: center; align-items: flex-start;
+  }
+  .frame-col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .frame-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: #A39890; text-transform: uppercase; }
+
+  .device-ios, .device-android {
+    break-inside: avoid; page-break-inside: avoid;
+  }
+
+  .design-note {
+    width: 100%; max-width: 260mm; margin: 10mm auto 0;
+    padding: 14px 18px; background: rgba(255,255,255,0.7); border-radius: 14px;
+    font-size: 11px; line-height: 1.7; color: #6B6059;
+  }
+  .design-note h3 { margin: 0 0 6px; font-size: 12px; color: #2B2622; }
+  .design-note b { color: #2B2622; }
+</style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="app-data.jsx"></script>
+<script type="text/babel" src="app-ui.jsx"></script>
+<script type="text/babel" src="app-home.jsx"></script>
+<script type="text/babel" src="app-detail.jsx"></script>
+<script type="text/babel" src="app-add.jsx"></script>
+<script type="text/babel" src="app-merge.jsx"></script>
+
+<script type="text/babel">
+
+function IosFrame({ children }) {
+  return (
+    <div className="device-ios" style={{
+      width: 360, height: 720, borderRadius: 44, overflow: 'hidden', position: 'relative',
+      background: '#FAF6F1',
+      boxShadow: '0 20px 40px rgba(0,0,0,0.12), 0 0 0 9px #1a1a1a',
+    }}>
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0, height: 44, zIndex: 100,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '0 22px 0 26px', pointerEvents: 'none',
+      }}>
+        <span style={{ fontSize: 14, fontWeight: 600, color: '#000' }}>9:41</span>
+        <div style={{ display: 'flex', gap: 5 }}>
+          <svg width="16" height="10" viewBox="0 0 17 11"><rect x="0" y="6.5" width="3" height="4.5" rx="0.7" fill="#000"/><rect x="4.5" y="4.5" width="3" height="6.5" rx="0.7" fill="#000"/><rect x="9" y="2.5" width="3" height="8.5" rx="0.7" fill="#000"/><rect x="13.5" y="0" width="3" height="11" rx="0.7" fill="#000"/></svg>
+          <svg width="22" height="10" viewBox="0 0 24 11"><rect x="0.5" y="0.5" width="20" height="10" rx="3" fill="none" stroke="#000" strokeOpacity="0.4"/><rect x="2" y="2" width="17" height="7" rx="1.5" fill="#000"/></svg>
+        </div>
+      </div>
+      <div style={{
+        position: 'absolute', top: 9, left: '50%', transform: 'translateX(-50%)',
+        width: 112, height: 30, borderRadius: 24, background: '#000', zIndex: 99,
+      }}/>
+      <div style={{ position: 'absolute', inset: 0, paddingTop: 44, overflow: 'hidden' }}>
+        {children}
+      </div>
+      <div style={{
+        position: 'absolute', bottom: 7, left: '50%', transform: 'translateX(-50%)',
+        width: 125, height: 4.5, borderRadius: 100, background: 'rgba(0,0,0,0.3)', zIndex: 100,
+      }}/>
+    </div>
+  );
+}
+
+function AndroidFrame({ children }) {
+  return (
+    <div className="device-android" style={{
+      width: 360, height: 720, borderRadius: 33, overflow: 'hidden', position: 'relative',
+      background: '#FAF6F1',
+      boxShadow: '0 20px 40px rgba(0,0,0,0.12), 0 0 0 7px #2a2a2a',
+    }}>
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0, height: 30, zIndex: 100,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '0 15px', pointerEvents: 'none',
+      }}>
+        <span style={{ fontSize: 11, fontWeight: 500, color: '#2B2622' }}>9:41</span>
+        <div style={{ display: 'flex', gap: 5 }}>
+          <svg width="13" height="9" viewBox="0 0 14 10"><path d="M7 9L0.5 2.5a9 9 0 0113 0L7 9z" fill="#2B2622"/></svg>
+          <svg width="13" height="9" viewBox="0 0 14 10"><rect x="3" y="1.5" width="7" height="8" rx="1" fill="#2B2622"/></svg>
+        </div>
+      </div>
+      <div style={{
+        position: 'absolute', top: 9, left: '50%', transform: 'translateX(-50%)',
+        width: 16, height: 16, borderRadius: '50%', background: '#000', zIndex: 99,
+      }}/>
+      <div style={{ position: 'absolute', inset: 0, paddingTop: 30, overflow: 'hidden' }}>
+        {children}
+      </div>
+      <div style={{
+        position: 'absolute', bottom: 6, left: '50%', transform: 'translateX(-50%)',
+        width: 90, height: 3.5, borderRadius: 2, background: 'rgba(43,38,34,0.4)', zIndex: 100,
+      }}/>
+    </div>
+  );
+}
+
+// Static screens — set props to reach each state directly
+function HomeListView() {
+  const [layout, setLayout] = React.useState('list');
+  return <HomeScreen products={INITIAL_PRODUCTS} layout={layout} onLayout={setLayout} onAdd={()=>{}} onOpen={()=>{}} platform="ios"/>;
+}
+function HomeGridView() {
+  const [layout, setLayout] = React.useState('grid');
+  return <HomeScreen products={INITIAL_PRODUCTS} layout={layout} onLayout={setLayout} onAdd={()=>{}} onOpen={()=>{}} platform="android"/>;
+}
+function DetailView({ id = 'p1' }) {
+  const product = INITIAL_PRODUCTS.find(p => p.id === id);
+  return <DetailScreen product={product} allProducts={INITIAL_PRODUCTS} onBack={()=>{}} onMergeOpen={()=>{}} onAddRecord={()=>{}}/>;
+}
+function AddView() {
+  return <AddScreen onCancel={()=>{}} onSave={()=>{}}/>;
+}
+function MergeView() {
+  const product = INITIAL_PRODUCTS.find(p => p.id === 'p4');
+  const cands = INITIAL_PRODUCTS.filter(p => p.name === product.name && p.id !== 'p4');
+  return <MergeScreen product={product} candidates={cands} onCancel={()=>{}} onMerge={()=>{}}/>;
+}
+
+function Page({ title, sub, pageno, children, note }) {
+  return (
+    <div className="page">
+      <div className="page-header">
+        <div>
+          <h1>{title}</h1>
+          <div className="sub">{sub}</div>
+        </div>
+        <div className="pageno">{pageno}</div>
+      </div>
+      <div className="frames-row">{children}</div>
+      {note && <div className="design-note">{note}</div>}
+    </div>
+  );
+}
+
+function Col({ label, children }) {
+  return (
+    <div className="frame-col">
+      <div className="frame-label">{label}</div>
+      {children}
+    </div>
+  );
+}
+
+function PrintRoot() {
+  return (
+    <>
+      <Page title="🛒 PriceLoggerApp" sub="買い物記録アプリ — ホーム画面" pageno="01 / 05"
+        note={<><h3>ホーム画面</h3>
+          検索・カテゴリフィルタ・店舗フィルタ・ソート・<b>リスト/グリッド切替</b>・FAB（右下＋ボタン）で追加。
+          10件のサンプル商品を表示。最新価格・店舗・日付が一目で確認可能。</>}>
+        <Col label="iOS — List layout"><IosFrame><HomeListView/></IosFrame></Col>
+        <Col label="Android — Grid layout"><AndroidFrame><HomeGridView/></AndroidFrame></Col>
+      </Page>
+
+      <Page title="商品詳細 — たまご（個数ベース）" sub="最新価格・単価計算・推移グラフ・過去記録" pageno="02 / 05"
+        note={<><h3>詳細画面（個数ベース商品）</h3>
+          <b>1個あたり</b>の単価自動計算、<b>個数換算スライダー</b>、<b>価格推移グラフ</b>（店舗別色分け切替可能）、過去の購入記録一覧。</>}>
+        <Col label="iOS"><IosFrame><DetailView id="p1"/></IosFrame></Col>
+        <Col label="Android"><AndroidFrame><DetailView id="p1"/></AndroidFrame></Col>
+      </Page>
+
+      <Page title="商品詳細 — 国産鶏もも肉（重さベース）" sub="100g換算・任意重さ換算・統合提案" pageno="03 / 05"
+        note={<><h3>詳細画面（重さベース商品）</h3>
+          <b>100gあたり</b>単価、任意の重さ（例: 450g）への<b>価格換算</b>、同名商品が別登録されている場合は<b>統合提案バナー</b>を表示。</>}>
+        <Col label="iOS"><IosFrame><DetailView id="p4"/></IosFrame></Col>
+        <Col label="Android"><AndroidFrame><DetailView id="p4"/></AndroidFrame></Col>
+      </Page>
+
+      <Page title="追加画面" sub="新規商品 + 最初の購入記録" pageno="04 / 05"
+        note={<><h3>追加画面</h3>
+          商品画像モード切替（<b>絵文字 / アイコン / 写真</b>）、8カラーパレット、カテゴリ・単位（個数/重さ）・店舗・税抜/税込価格（自動換算）・購入日。
+          入力中に<b>単価プレビュー</b>が即座に表示される。</>}>
+        <Col label="iOS"><IosFrame><AddView/></IosFrame></Col>
+        <Col label="Android"><AndroidFrame><AddView/></AndroidFrame></Col>
+      </Page>
+
+      <Page title="商品統合画面" sub="同名の別登録をマージ" pageno="05 / 05"
+        note={<><h3>統合画面</h3>
+          「国産鶏もも肉 300g」と「400g」など、<b>同名で別登録</b>された商品を1つにまとめる。重さや個数が異なっても統合後は単価で比較可能。
+          ユーザーが選択した商品のみをマージ対象にする柔軟な UI。</>}>
+        <Col label="iOS"><IosFrame><MergeView/></IosFrame></Col>
+        <Col label="Android"><AndroidFrame><MergeView/></AndroidFrame></Col>
+      </Page>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<PrintRoot/>);
+
+// Auto-print after fonts + Babel + React finished
+(async () => {
+  try {
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+  } catch(e) {}
+  setTimeout(() => { window.print(); }, 900);
+})();
+</script>
+
+</body>
+</html>
