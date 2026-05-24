@@ -540,13 +540,15 @@ class _AddScreenState extends State<AddScreen> {
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.only(left: 4.0, bottom: 8.0),
-      style: const TextStyle(
-        fontSize: 11,
-        fontWeight: FontWeight.w700,
-        color: AppColors.ink2,
-        letterSpacing: 0.5,
+      child: Text(
+        title.toUpperCase(),
+        style: const TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w700,
+          color: AppColors.ink2,
+          letterSpacing: 0.5,
+        ),
       ),
-      child: Text(title.toUpperCase()),
     );
   }
 

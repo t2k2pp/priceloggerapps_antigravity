@@ -1,10 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../models/product.dart';
 import '../theme/colors.dart';
 import '../theme/constants.dart';
-import '../widgets/product_thumb.dart';
 import '../widgets/price_chart.dart';
 import '../screens/add_screen.dart'; // 数値フォーマッター拡張の利用
 
@@ -41,7 +39,11 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final product = widget.product;
+    // 画面更新に対応するため、全商品リストから最新の商品情報を取得する
+    final product = widget.allProducts.firstWhere(
+      (p) => p.id == widget.product.id,
+      orElse: () => widget.product,
+    );
     final latest = product.latestRecord;
 
     // 過去記録のソート（日付降順）
@@ -89,28 +91,48 @@ class _DetailScreenState extends State<DetailScreen> {
         elevation: 0,
         leading: Padding(
           padding: const EdgeInsets.only(left: 12.0),
-          child: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.ink, size: 20),
-            onPressed: widget.onBack,
-            style: IconButton.styleFrom(
-              backgroundColor: AppColors.card,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-              shadowColor: Colors.black.withOpacity(0.04),
-              elevation: 2,
+          child: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: AppColors.card,
+              borderRadius: BorderRadius.circular(14),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.04),
+                  blurRadius: 2,
+                  offset: const Offset(0, 1),
+                )
+              ],
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.ink, size: 20),
+              onPressed: widget.onBack,
+              padding: EdgeInsets.zero,
             ),
           ),
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 12.0),
-            child: IconButton(
-              icon: const Icon(Icons.more_horiz, color: AppColors.ink2),
-              onPressed: () {},
-              style: IconButton.styleFrom(
-                backgroundColor: AppColors.card,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                shadowColor: Colors.black.withOpacity(0.04),
-                elevation: 2,
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: AppColors.card,
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.04),
+                    blurRadius: 2,
+                    offset: const Offset(0, 1),
+                  )
+                ],
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.more_horiz, color: AppColors.ink2),
+                onPressed: () {},
+                padding: EdgeInsets.zero,
               ),
             ),
           ),
@@ -214,7 +236,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           ),
                           const SizedBox(height: 4),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.between,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.baseline,
                             textBaseline: TextBaseline.alphabetic,
                             children: [
@@ -360,8 +382,15 @@ class _DetailScreenState extends State<DetailScreen> {
                   children: [
                     const Padding(
                       padding: EdgeInsets.only(left: 4.0, bottom: 8.0),
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.ink2, letterSpacing: 0.3),
-                      child: Text('単価計算'),
+                      child: Text(
+                        '単価計算',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.ink2,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
                     ),
                     Container(
                       decoration: BoxDecoration(
@@ -376,7 +405,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         children: [
                           // 基準単価表示
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.between,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -423,7 +452,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           ),
                           // 任意の量換算
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.between,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 product.unitType == 'weight' ? '重さ換算' : '個数換算',
@@ -508,12 +537,19 @@ class _DetailScreenState extends State<DetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.between,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Padding(
                         padding: EdgeInsets.only(left: 4.0),
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.ink2, letterSpacing: 0.3),
-                        child: Text('価格推移'),
+                        child: Text(
+                          '価格推移',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.ink2,
+                            letterSpacing: 0.3,
+                          ),
+                        ),
                       ),
                       TextButton(
                         onPressed: () {
@@ -639,7 +675,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.between,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(left: 4.0),
